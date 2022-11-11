@@ -5,6 +5,7 @@ public class Square {
     private int bombNeighbours; //Number of bomb neighbours, includes corner neighbours.
     private ArrayList<Square> neighbours; //Neighbouring Squares, excludes corner neighbours.
     private boolean hidden, bomb, flagged;
+    
 
     public Square(boolean bomb) {
         this.bomb = bomb;

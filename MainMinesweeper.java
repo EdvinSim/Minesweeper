@@ -9,7 +9,8 @@ public class MainMinesweeper {
 
         Gameboard board = new Gameboard(size);
 
-        while(!board.gameOver()) {
+
+        while(board.leftToBeOpened() > 0 && !board.gameOver()) {
             System.out.println(board);
             //System.out.println(board.toStringHiddenValues());
 
@@ -42,7 +43,7 @@ public class MainMinesweeper {
             System.out.println("GAME OVER!");
         }
         else {
-            System.out.println("HURRAY!");
+            System.out.println("CONGRATULATIONS!");
         }
 
     }

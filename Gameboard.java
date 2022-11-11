@@ -5,9 +5,11 @@ class Gameboard {
 
     private Square[][] board;
     private boolean gameOver;
+    private int leftToBeOpened;
 
     public Gameboard(int size) {
         gameOver = false;
+        leftToBeOpened = 0;
 
         board = new Square[size][size];
 
@@ -20,6 +22,7 @@ class Gameboard {
                 }
                 else {
                     board[i][j] = new Square(false);
+                    leftToBeOpened++;
                 }
             }
         }
@@ -43,7 +46,7 @@ class Gameboard {
                 //Top neighbours
                 if(i != 0) {
                     neighbours.add(b[i-1][j]);
-                    //square.addNeighbour(b[i-1][j]);
+                    square.addNeighbour(b[i-1][j]);
 
                     if(j != 0) neighbours.add(b[i-1][j-1]);
                     if(j != endOfBoard) neighbours.add(b[i-1][j+1]);
@@ -52,7 +55,7 @@ class Gameboard {
                 //Bottom neighbours
                 if(i != endOfBoard) {
                     neighbours.add(b[i+1][j]);
-                    //square.addNeighbour(b[i+1][j]);
+                    square.addNeighbour(b[i+1][j]);
 
                     if(j != 0) neighbours.add(b[i+1][j-1]);
                     if(j != endOfBoard) neighbours.add(b[i+1][j+1]);
@@ -61,17 +64,16 @@ class Gameboard {
                 //Left and right neighbour
                 if(j != 0) {
                     neighbours.add(b[i][j-1]);
-                    //square.addNeighbour(b[i][j-1]);
+                    square.addNeighbour(b[i][j-1]);
                 }
                 if(j != endOfBoard) {
                     neighbours.add(b[i][j+1]);
-                    //square.addNeighbour(b[i][j+1]);
+                    square.addNeighbour(b[i][j+1]);
                 }
                 
                 //Check witch neighbours are bombs
                 for(Square neighbour: neighbours) {
                     if(neighbour.isBomb()) square.increaseBombNeighbours();
-                    square.addNeighbour(neighbour);
                 }
             }
         }
@@ -91,8 +93,14 @@ class Gameboard {
     public void open(int row, int col) {
         Square sq = board[row][col];
         sq.open();
-        if(sq.isBomb()) gameOver = true;
-        openNeighbours(sq);
+
+        if(sq.isBomb()) {
+            gameOver = true;
+        }
+        else {
+            leftToBeOpened--;
+            openNeighbours(sq);
+        }
     }
 
 
@@ -102,6 +110,8 @@ class Gameboard {
 
             if (!neighbour.isBomb() && neighbour.isHidden()) {
                 neighbour.open();
+                leftToBeOpened--;
+
                 if(neighbour.isBomb()) gameOver = true;
 
                 if(neighbour.getValue().equals("")) {
@@ -116,8 +126,8 @@ class Gameboard {
         return gameOver;
     }
 
-    public void checkFinished() {
-
+    public int leftToBeOpened() {
+        return leftToBeOpened;
     }
 
 
